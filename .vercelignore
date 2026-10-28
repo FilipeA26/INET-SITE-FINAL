@@ -1,0 +1,8 @@
+node_modules
+dist
+_pecas-do-P6
+.taste-skill
+*.tsbuildinfo
+* - Copia*
+.env*
+.vercel

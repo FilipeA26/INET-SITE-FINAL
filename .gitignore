@@ -11,3 +11,6 @@ dist
 # relatorios e capturas dos agentes (ficam so no PC)
 _pecas-do-P6/
 .taste-skill/
+
+.vercel
+.env*
