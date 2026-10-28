@@ -1,0 +1,243 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+/* Largura do conteúdo: as grades se esticam até perto das laterais em telas largas */
+:root { --content-max: 100rem; }
+
+/*
+ * Seção clara (claro-neve): fundo com costuras suaves de entrada e saída para o escuro (#010818).
+ * Verde-limão só como fundo de botão; texto e links no claro usam ink/azul para ter contraste.
+ * Seletores com :where() (especificidade baixa): um utilitário Tailwind na própria peça ainda vence.
+ */
+.tone-snow {
+  --snow-bg: #EFF3F9;
+  --snow-ink: #010818;
+  --snow-muted: rgb(1 8 24 / 0.65);
+  --snow-accent: #0062EC;
+  --snow-card: #F7F9FC;
+  --snow-line: rgb(1 8 24 / 0.08);
+  color: var(--snow-ink);
+}
+
+/*
+ * Profundidade e costuras no claro-neve (Home .tone-snow e faixas [data-tone=light] das páginas internas).
+ * Sem véu lateral nas bordas (removido na Rodada 7). As rampas superior e inferior começam/terminam
+ * em rgb(1 8 24 / 0) → #010818 → azul INET → #EFF3F9, eliminando qualquer emenda dura nas fronteiras.
+ */
+:root {
+  --seam: clamp(9rem, 20vw, 18rem);
+  --seam-ramp: #EFF3F9 0%, #E3EAF6 14%, #C6D5EE 30%, #94B0E0 48%, #5479C6 64%, #1F4DA3 79%, #0A2D78 90%, #021B5B 100%;
+  --seam-top-ramp:
+    rgb(1 8 24 / 0) 0%,
+    rgb(1 8 24 / 0.55) 6%,
+    #010818 14%,
+    #010E2D 22%,
+    #021B5B 31%,
+    #0A2D78 41%,
+    #1F4DA3 53%,
+    #5479C6 66%,
+    #94B0E0 79%,
+    #C6D5EE 89%,
+    #E3EAF6 96%,
+    #EFF3F9 100%;
+  --seam-bottom-ramp:
+    #EFF3F9 0%,
+    #E3EAF6 4%,
+    #C6D5EE 11%,
+    #94B0E0 21%,
+    #5479C6 34%,
+    #1F4DA3 47%,
+    #0A2D78 59%,
+    #021B5B 69%,
+    #010E2D 78%,
+    #010818 86%,
+    rgb(1 8 24 / 0.55) 94%,
+    rgb(1 8 24 / 0) 100%;
+  --snow-depth:
+    url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 1440 900' preserveAspectRatio='xMidYMid slice'%3E%3Cdefs%3E%3Cpattern id='d' width='22' height='22' patternUnits='userSpaceOnUse'%3E%3Ccircle cx='11' cy='11' r='1.1' fill='%23010818' fill-opacity='.10'/%3E%3C/pattern%3E%3CradialGradient id='g' cx='50%25' cy='50%25' r='72%25'%3E%3Cstop offset='.5' stop-color='%23fff' stop-opacity='0'/%3E%3Cstop offset='1' stop-color='%23fff'/%3E%3C/radialGradient%3E%3Cmask id='m'%3E%3Crect width='1440' height='900' fill='url(%23g)'/%3E%3C/mask%3E%3C/defs%3E%3Crect width='1440' height='900' fill='url(%23d)' mask='url(%23m)'/%3E%3Cg fill='none' stroke='%23010818' stroke-linecap='round'%3E%3Cpath d='M-40 760C220 700 330 520 520 470S860 470 1010 300 1300 80 1480 40' stroke-opacity='.09' stroke-width='1.4'/%3E%3Cpath d='M-40 800C240 740 360 570 560 520S880 520 1040 350 1320 130 1480 100' stroke-opacity='.06' stroke-width='1'/%3E%3Cpath d='M-40 840C260 790 390 620 600 570S900 570 1070 400 1340 190 1480 160' stroke-opacity='.05' stroke-width='1'/%3E%3Cpath d='M-40 140C160 180 260 320 420 360' stroke-opacity='.07' stroke-width='1.2'/%3E%3Cpath d='M1480 620C1300 600 1220 720 1060 790S760 860 640 940' stroke-opacity='.07' stroke-width='1.2'/%3E%3C/g%3E%3Cpath d='M-40 780C230 720 345 545 540 495S870 495 1025 325 1310 105 1480 70' fill='none' stroke='%230062EC' stroke-opacity='.18' stroke-width='1.2'/%3E%3C/svg%3E");
+}
+.tone-snow, [data-tone="light"] { position: relative; isolation: isolate; }
+
+/* Costura dupla (topo escuro → neve e base neve → escuro) em todas as faixas claras das páginas internas */
+[data-tone="light"] {
+  padding-top: var(--seam);
+  padding-bottom: var(--seam);
+  background:
+    linear-gradient(180deg, var(--seam-top-ramp)) 0 0 / 100% var(--seam) no-repeat,
+    linear-gradient(180deg, #EFF3F9, #EFF3F9) 0 var(--seam) / 100% calc(100% - (2 * var(--seam))) no-repeat,
+    linear-gradient(180deg, var(--seam-bottom-ramp)) 0 100% / 100% var(--seam) no-repeat;
+}
+
+/* Home .tone-snow seguida pelo ConnectFinale: rampa de entrada no topo e entrega em #EFF3F9 para o ConnectFinale */
+.tone-snow:has(+ .inet-connect-finale) {
+  padding-top: calc(var(--seam) + 5rem) !important;
+  padding-bottom: 6rem !important;
+  background:
+    linear-gradient(180deg, var(--seam-top-ramp)) 0 0 / 100% var(--seam) no-repeat,
+    linear-gradient(180deg, #EFF3F9, #EFF3F9) 0 var(--seam) / 100% calc(100% - var(--seam)) no-repeat !important;
+}
+
+/* Qualquer outra .tone-snow que não seja seguida pelo ConnectFinale: rampa suave no topo e na base */
+.tone-snow:not(:has(+ .inet-connect-finale)) {
+  padding-top: calc(var(--seam) + 5rem) !important;
+  padding-bottom: calc(var(--seam) + 5rem) !important;
+  background:
+    linear-gradient(180deg, var(--seam-top-ramp)) 0 0 / 100% var(--seam) no-repeat,
+    linear-gradient(180deg, #EFF3F9, #EFF3F9) 0 var(--seam) / 100% calc(100% - (2 * var(--seam))) no-repeat,
+    linear-gradient(180deg, var(--seam-bottom-ramp)) 0 100% / 100% var(--seam) no-repeat !important;
+}
+
+.tone-snow::before, [data-tone="light"]::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  z-index: -1;
+  pointer-events: none;
+  background: var(--snow-depth);
+  background-size: cover;
+  background-position: center;
+  background-repeat: no-repeat;
+  -webkit-mask-image: linear-gradient(180deg, transparent var(--seam), #000 calc(var(--seam) + 140px), #000 calc(100% - var(--seam) - 140px), transparent calc(100% - var(--seam)));
+  mask-image: linear-gradient(180deg, transparent var(--seam), #000 calc(var(--seam) + 140px), #000 calc(100% - var(--seam) - 140px), transparent calc(100% - var(--seam)));
+}
+.tone-snow:has(+ .inet-connect-finale)::before {
+  -webkit-mask-image: linear-gradient(180deg, transparent var(--seam), #000 calc(var(--seam) + 140px), #000 calc(100% - 140px), transparent 100%);
+  mask-image: linear-gradient(180deg, transparent var(--seam), #000 calc(var(--seam) + 140px), #000 calc(100% - 140px), transparent 100%);
+}
+@media (max-width: 767px) {
+  /* no celular a arte inteira caberia em 375 px e as fibras sumiriam: mostra um recorte maior, repetido no comprido */
+  .tone-snow::before, [data-tone="light"]::before { background-size: 980px auto; background-position: 38% 0; background-repeat: repeat-y; }
+}
+
+/* Costura suave nas aberturas NameHero e seções com overflow-hidden para evitar corte seco de brilhos */
+.pg-namehero {
+  background: linear-gradient(180deg, #010818 0%, #010818 calc(100% - 8rem), rgb(1 8 24 / 0) 100%) !important;
+}
+section.overflow-hidden > div.pointer-events-none.absolute.rounded-full {
+  -webkit-mask-image: radial-gradient(closest-side, #000 0%, transparent 100%);
+  mask-image: radial-gradient(closest-side, #000 0%, transparent 100%);
+}
+
+/* Lenis (rolagem suave) */
+html.lenis, html.lenis body { height: auto; }
+.lenis.lenis-smooth { scroll-behavior: auto !important; }
+.lenis.lenis-stopped { overflow: hidden; }
+
+@layer base {
+  html { -webkit-text-size-adjust: 100%; }
+  body { @apply overflow-x-hidden bg-navy-ink font-sans text-white antialiased; }
+  ::selection { @apply bg-lime text-navy; }
+  /* foco sempre visível para quem navega pelo teclado */
+  :focus-visible { @apply rounded-md outline outline-2 outline-offset-2 outline-lime; }
+  summary::-webkit-details-marker { display: none; }
+}
+
+@layer components {
+  .wrap { @apply mx-auto w-full max-w-6xl px-5 sm:px-10 lg:px-16; }
+  .tag { @apply font-display text-[11px] font-medium uppercase tracking-[0.2em] text-lime sm:tracking-[0.28em]; }
+  .h-xl { @apply font-display text-[2.6rem] font-light leading-[1.02] tracking-[-0.02em] sm:text-7xl lg:text-8xl; }
+  .h-lg { @apply font-display text-[2rem] font-light leading-[1.08] tracking-[-0.02em] sm:text-5xl lg:text-6xl; }
+  .h-md { @apply font-display text-2xl font-light leading-tight sm:text-3xl; }
+  .lead { @apply text-base leading-relaxed text-white/70 sm:text-lg; }
+  .btn {
+    @apply inline-flex min-h-[44px] items-center justify-center gap-2 rounded-full px-6 py-3 text-sm font-semibold
+      transition-[transform,background-color,box-shadow,color,border-color] duration-500 ease-[cubic-bezier(0.16,1,0.3,1)];
+  }
+  .btn-lime { @apply btn bg-lime text-navy-ink hover:-translate-y-0.5 hover:shadow-[0_14px_40px_-12px_rgba(112,224,0,0.9)]; }
+  .btn-ghost { @apply btn border border-white/25 text-white hover:border-lime hover:text-lime; }
+
+  /* card premium: elevação, zoom da imagem contido, sobreposição em degradê */
+  .card {
+    @apply relative overflow-hidden rounded-[1.75rem] border border-white/10 bg-[#020F2E]/80
+      transition-[transform,border-color,box-shadow] duration-700 ease-[cubic-bezier(0.16,1,0.3,1)];
+  }
+  .card:hover, .card:focus-within { @apply -translate-y-1 border-white/25 shadow-[0_30px_60px_-30px_rgba(0,0,0,0.9)]; }
+  .card-media { @apply absolute inset-0 transition-transform duration-[1200ms] ease-[cubic-bezier(0.16,1,0.3,1)]; }
+  .card:hover .card-media, .card:focus-within .card-media { @apply scale-[1.06]; }
+  .card-icon { @apply transition-transform duration-700 ease-[cubic-bezier(0.16,1,0.3,1)]; }
+  .card:hover .card-icon, .card:focus-within .card-icon { @apply -translate-y-0.5 rotate-[-6deg]; }
+  .card-link { @apply inline-flex items-center gap-1.5 text-sm font-semibold text-lime; }
+  .card-link svg { @apply transition-transform duration-500; }
+  .card:hover .card-link svg, .card-link:hover svg { @apply translate-x-1; }
+
+  /* conteúdo esticado: a seção ocupa a largura; só os textos de leitura limitam a medida */
+  :where(main, footer) .wrap { max-width: var(--content-max); padding-inline: clamp(1.25rem, 4vw, 5rem); }
+  main .lead { max-width: 62ch; }
+  /* notas em letra miúda: com o conteúdo esticado chegavam a ~210 caracteres por linha */
+  :where(main) p:where(.text-xs) { max-width: 110ch; }
+  :where(main) p:where(.text-xs.text-center) { margin-inline: auto; }
+
+  /* peças da marca dentro de uma seção .tone-snow */
+  .tone-snow :where(h1, h2, h3, h4, .h-xl, .h-lg, .h-md) { color: var(--snow-ink); }
+  .tone-snow :where(p, .lead) { color: var(--snow-muted); }
+  .tone-snow :where(.tag, .card-link) { color: var(--snow-accent); }
+  .tone-snow :where(.card) { background-color: var(--snow-card); border-color: var(--snow-line); }
+  .tone-snow :where(.card:hover, .card:focus-within) { border-color: rgb(1 8 24 / 0.16); box-shadow: 0 30px 60px -34px rgb(1 8 24 / 0.35); }
+  .tone-snow :where(.btn-ghost) { border-color: rgb(1 8 24 / 0.25); color: var(--snow-ink); }
+  .tone-snow :where(.btn-ghost:hover) { border-color: var(--snow-accent); color: var(--snow-accent); }
+  .tone-snow :where(.btn-lime) { color: var(--snow-ink); }
+  .tone-snow :where(a:not(.btn-lime, .btn-ghost):hover) { color: var(--snow-accent); }
+  .tone-snow :where(:focus-visible) { outline-color: var(--snow-accent); }
+  .tone-snow ::selection { background-color: var(--snow-accent); color: #fff; }
+}
+
+/* artes dos cards de entretenimento: paradas por padrão, ganham vida no hover/foco */
+@keyframes art-bar { 0%, 100% { transform: scaleY(1); } 50% { transform: scaleY(0.45); } }
+@keyframes art-ember { from { transform: translateY(0); opacity: 0; } 20% { opacity: 1; } to { transform: translateY(-320px); opacity: 0; } }
+@keyframes art-twinkle { 0%, 100% { opacity: 1; } 50% { opacity: 0.25; } }
+@keyframes art-ring { 0%, 100% { transform: scale(1); opacity: 0.8; } 50% { transform: scale(1.06); opacity: 0.4; } }
+@keyframes art-fog { from { transform: translateX(-8%); } to { transform: translateX(8%); } }
+.art-bar { transform-origin: bottom; animation: art-bar 1.4s ease-in-out infinite paused; }
+.art-ember { animation: art-ember 3.2s linear infinite paused; opacity: 0.6; }
+.art-twinkle { animation: art-twinkle 2.4s ease-in-out infinite paused; }
+.art-ring { animation: art-ring 2.8s ease-in-out infinite paused; }
+.art-fog { animation: art-fog 6s ease-in-out infinite alternate paused; }
+.card:hover :is(.art-bar, .art-ember, .art-twinkle, .art-ring, .art-fog),
+.card:focus-within :is(.art-bar, .art-ember, .art-twinkle, .art-ring, .art-fog) { animation-play-state: running; }
+
+@media (hover: none) {
+  /* no toque não existe hover: o card mostra o estado de destaque ao ser tocado */
+  .card:active { @apply border-white/25; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after { animation-duration: 0.01ms !important; transition-duration: 0.01ms !important; }
+}
+
+/* Leaflet no tema escuro da marca (filtro só nos tiles; atribuição preservada) */
+.leaflet-container { @apply bg-navy-ink font-sans; }
+.inet-tiles { filter: invert(1) hue-rotate(195deg) brightness(0.85) contrast(0.95) saturate(0.6); }
+.leaflet-control-attribution { @apply !bg-navy-ink/80 !text-white/60; }
+.leaflet-control-attribution a { @apply !text-lime; }
+.leaflet-bar a { @apply !border-white/15 !bg-navy-ink !text-white; }
+.leaflet-popup-content-wrapper, .leaflet-popup-tip { @apply !bg-[#020F2E] !text-white; }
+.inet-pin { @apply relative block h-4 w-4 rounded-full bg-lime shadow-[0_0_0_4px_rgba(112,224,0,0.25),0_0_18px_#70E000]; }
+.inet-pin::after { content: ""; @apply absolute inset-0 animate-ping rounded-full bg-lime/60; }
+
+/* WhatsApp: onda suave em volta do botão */
+@keyframes wa-ping { 0% { transform: scale(1); opacity: 0.7; } 70%, 100% { transform: scale(1.6); opacity: 0; } }
+
+/* Alexa: fios de luz correndo até os aparelhos */
+@keyframes alexa-link { to { stroke-dashoffset: -20; } }
+.alexa-link { animation: alexa-link 1.6s linear infinite; }
+
+/* Transição curta não-bloqueante da marca (hud/PageLoader): véu que se abre com traço em ≤ 540 ms */
+@keyframes inet-veil-out {
+  0% { opacity: 0.96; }
+  50% { opacity: 0.90; }
+  100% { opacity: 0; }
+}
+@keyframes inet-mark-trace {
+  0% { opacity: 1; transform: scale(0.95); }
+  55% { opacity: 1; transform: scale(1); }
+  100% { opacity: 0; transform: scale(1.03); }
+}
+@keyframes inet-stroke-draw {
+  0% { stroke-dashoffset: 280; opacity: 1; }
+  65% { stroke-dashoffset: 0; opacity: 1; }
+  100% { stroke-dashoffset: 0; opacity: 0; }
+}
+
+/* dica de arrastar: a seta balança para os lados */
+@keyframes drag-hint { 0%, 100% { transform: translateX(0); } 50% { transform: translateX(5px); } }
